@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -52,17 +55,71 @@
       <!-- Formulaire d'inscription -->
       <div class="main-content">
         <div class="container">
-            <form action="traitement_inscription.php" method="POST" class="registration-form">
-                <div class="form-group">
-                    <label for="email">Adresse email :</label>
-                    <input type="email" id="email" name="email" placeholder="email"required>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">Inscription</h2>
+                            
+                            <?php if(isset($_SESSION['errors']) && !empty($_SESSION['errors'])): ?>
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        <?php 
+                                        foreach($_SESSION['errors'] as $error) {
+                                            echo "<li>" . htmlspecialchars($error) . "</li>";
+                                        }
+                                        unset($_SESSION['errors']);
+                                        ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if(isset($_SESSION['success_message'])): ?>
+                                <div class="alert alert-success">
+                                    <?php 
+                                    echo htmlspecialchars($_SESSION['success_message']);
+                                    unset($_SESSION['success_message']);
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <form action="traitement_inscription.php" method="POST" class="registration-form">
+                                <div class="form-group">
+                                    <label for="email">Adresse email</label>
+                                    <input type="email" 
+                                           class="form-control" 
+                                           id="email" 
+                                           name="email" 
+                                           value="<?php echo isset($_SESSION['form_data']['email']) ? htmlspecialchars($_SESSION['form_data']['email']) : ''; ?>"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Mot de passe</label>
+                                    <input type="password" 
+                                           class="form-control" 
+                                           id="password" 
+                                           name="password" 
+                                           required>
+                                    <small class="form-text text-muted">Le mot de passe doit contenir au moins 8 caractères</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password_confirm">Confirmer le mot de passe</label>
+                                    <input type="password" 
+                                           class="form-control" 
+                                           id="password_confirm" 
+                                           name="password_confirm" 
+                                           required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
+                            </form>
+                            
+                            <div class="mt-3 text-center">
+                                <p>Déjà inscrit ? <a href="connexion.php">Connectez-vous ici</a></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Mot de passe :</label>
-                    <input type="password" id="password" name="password" placeholder="mots de passe"required>
-                </div>
-                <button  type="submit" class="btn btn-primary">S'inscrire</button>
-            </form>
+            </div>
         </div>
     </div>
     <!-- Formulaire d'inscription -->
@@ -76,6 +133,22 @@
 <!-- Bootstrap -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    var password = document.getElementById('password').value;
+    var confirm = document.getElementById('password_confirm').value;
+    
+    if (password !== confirm) {
+        e.preventDefault();
+        alert('Les mots de passe ne correspondent pas !');
+    }
+});
+</script>
 </body>
 </html>
+<?php
+// Nettoyage des données de session après utilisation
+unset($_SESSION['form_data']);
+?>

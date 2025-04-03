@@ -1,49 +1,82 @@
 <?php
 session_start();
+require_once 'config.php';
 
-function get_PDO(): PDO {
-    $host = 'localhost';
-    $db   = 'brocelianimmo';
-    $user = 'root';
-    $pass = '';
-    $charset = 'utf8mb4';
-
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-    $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ];
-
-    try {
-        return new PDO($dsn, $user, $pass, $options);
-    } catch (\PDOException  $e) {
-        throw new \PDOException($e->getMessage(), (int)$e->getCode());
-    }
+// Fonction pour nettoyer les données
+function cleanInput($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
-
-function verif_user($email, $password) {
-    $pdo = get_PDO();
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $query = "INSERT INTO users (mail, pass) VALUES (?, ?)";
-    $stmt = $pdo->prepare($query);
-    if ($stmt->execute([$email, $hashed_password])) {
-        return true; 
-    } else {
-        return false; 
-    }
-}
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        if (verif_user($email, $password)) {
-            header("Location: user_connected.php");
-            exit();
-        } else {
-            header("Location: inscription.php");
-            exit();
+    // Récupération et nettoyage des données
+    $email = cleanInput($_POST['email']);
+    $password = $_POST['password'];
+    $password_confirm = $_POST['password_confirm'];
+    
+    // Validation
+    $errors = [];
+    
+    // Validation email
+    if (empty($email)) {
+        $errors[] = "L'email est requis";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Format d'email invalide";
+    }
+    
+    // Validation mot de passe
+    if (empty($password)) {
+        $errors[] = "Le mot de passe est requis";
+    } elseif (strlen($password) < 8) {
+        $errors[] = "Le mot de passe doit contenir au moins 8 caractères";
+    }
+    
+    // Vérification de la correspondance des mots de passe
+    if ($password !== $password_confirm) {
+        $errors[] = "Les mots de passe ne correspondent pas";
+    }
+    
+    // Si pas d'erreurs, on vérifie si l'email existe déjà
+    if (empty($errors)) {
+        try {
+            $pdo = getPDO();
+            
+            // Vérification si l'email existe déjà
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM utilisateurs WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetchColumn() > 0) {
+                $errors[] = "Cet email est déjà utilisé";
+            } else {
+                // Insertion du nouvel utilisateur
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO utilisateurs (email, mot_de_passe, date_inscription) VALUES (?, ?, NOW())");
+                
+                if ($stmt->execute([$email, $hashed_password])) {
+                    $_SESSION['success_message'] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+                    header("Location: connexion.php");
+                    exit();
+                } else {
+                    $errors[] = "Erreur lors de l'inscription";
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur SQL : " . $e->getMessage());
+            $errors[] = "Une erreur technique est survenue. Veuillez réessayer plus tard.";
         }
     }
+    
+    // S'il y a des erreurs
+    if (!empty($errors)) {
+        $_SESSION['errors'] = $errors;
+        $_SESSION['form_data'] = ['email' => $email];
+        header("Location: inscription.php");
+        exit();
+    }
+} else {
+    // Si quelqu'un essaie d'accéder directement au fichier
+    header("Location: inscription.php");
+    exit();
 }
+?>

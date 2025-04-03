@@ -50,43 +50,65 @@
 
 <!-- Description annonces -->
 <section class="apartment-details">
-  <div class="container">
-    <div class="row">
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="Images/exterieurannonce1.jpeg" class="d-block w-100" alt="Image 1">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div id="propertyCarousel" class="carousel slide property-carousel" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#propertyCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#propertyCarousel" data-slide-to="1"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="Images/exterieurannonce1.jpeg" class="d-block w-100" alt="Extérieur maison">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="Images/exterieurannonce2.jpeg" class="d-block w-100" alt="Vue jardin">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-target="#propertyCarousel" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Précédent</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-target="#propertyCarousel" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Suivant</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="property-info">
+                    <h1 class="property-title">Maison de campagne</h1>
+                    <div class="property-price">1 500 000 €</div>
+                    <div class="property-features">
+                        <div class="feature">
+                            <i class="fas fa-bed"></i>
+                            <span>7 chambres</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-bath"></i>
+                            <span>4 salles de bain</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>500 m²</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Quimper</span>
+                        </div>
+                    </div>
+                    <div class="property-description">
+                        <h2>Description</h2>
+                        <p>Bienvenue dans ce havre de paix niché au cœur de la légendaire forêt de Quimper. Cette maison de campagne, baignée de lumière, offre une retraite idyllique pour les amoureux de la nature et les rêveurs.</p>
+                    </div>
+                    <div class="property-contact">
+                        <a href="contact.php" class="btn btn-primary btn-lg btn-block">Contacter l'agent</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="carousel-item">
-      <img src="Images/exterieurannonce2.jpeg" class="d-block w-100" alt="Image 2">
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
-      <div class="col-md-6">
-        <h2>Maison de campagne</h2>
-        <p>Bienvenue dans ce havre de paix niché au cœur de la légendaire forêt de Quimper. Cette maison de campagne, baignée de lumière, offre une retraite idyllique pour les amoureux de la nature et les rêveurs.</p>
-        <ul>
-          <li>Chambre(s): 7</li>
-          <li>Salle(s) de bain: 4</li>
-          <li>Superficie: 500m²</li>
-          <li>Prix: 1 500 000€</li>
-        </ul>
-        <button href="inscription.php" class="btn btn-primary">Contacter l'agent</button>
-      </div>
-    </div>
-  </div>
 </section>
 <!-- Description annonces -->
 
